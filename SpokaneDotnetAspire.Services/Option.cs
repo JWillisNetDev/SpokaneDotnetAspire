@@ -38,4 +38,15 @@ public sealed class Option<T>
 	public static Option<T> None() => new(default, false);
 
 	public static implicit operator Option<T>(T value) => Some(value);
+
+	public void Match(Action<T> some, Action none)
+	{
+		if (IsSome)
+		{
+			some(_Value!);
+			return;
+		}
+
+		none();
+	}
 }
