@@ -8,7 +8,7 @@ public static class Option
 	public static Option<T> None<T>() => Option<T>.None();
 }
 
-public class Option<T>
+public sealed class Option<T>
 {
 	private readonly bool _HasValue;
 	private readonly T? _Value;

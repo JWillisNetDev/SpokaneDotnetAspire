@@ -83,6 +83,52 @@ public class MeetupRepositoriesTests : UnitTestBase
 	}
 
 	[Fact]
+	public async Task CreateMeetup_CreatesNewMeetup()
+	{
+		// Arrange
+		const string expectedTitle = "Hello, world!";
+		const string expectedContent = "This is a test";
+		const string expectedUrl = "https://example.com";
+
+		await InDbScopeAsync(async db =>
+		{
+			MeetupRepository repository = new(db);
+
+			// Act
+			var result = await repository.CreateMeetupAsync(expectedTitle, expectedContent, expectedUrl);
+
+			// Assert
+			result.IsOk.Should().BeTrue();
+		});
+
+		Meetup actualMeetup = null!;
+		await InDbScopeAsync(async db =>
+		{
+			actualMeetup = await db.Meetups.SingleAsync();
+		});
+
+		actualMeetup.Title.Should().Be(expectedTitle);
+		actualMeetup.Content.Should().Be(expectedContent);
+		actualMeetup.MeetupUrl.Should().Be(expectedUrl);
+	}
+
+	[Fact]
+	public async Task CreateMeetup_EmptyTitle_ReturnsErrorResult()
+	{
+		// Arrange
+		await InDbScopeAsync(async db =>
+		{
+			MeetupRepository repository = new(db);
+
+			// Act
+			var result = await repository.CreateMeetupAsync("", "Some content", null);
+
+			// Assert
+			result.IsError.Should().BeTrue();
+		});
+	}
+
+	[Fact]
 	public async Task UpdateMeetupAsync_UpdatesMeetupById()
 	{
 		// Arrange

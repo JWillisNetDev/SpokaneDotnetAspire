@@ -23,10 +23,17 @@ public class MeetupRepository
 		return await _Db.Meetups.FindAsync(id);
 	}
 
-	public async Task CreateMeetupAsync(string title, string content, string? url)
+	public async Task<Result<string>> CreateMeetupAsync(string title, string content, string? url)
 	{
-		ArgumentException.ThrowIfNullOrEmpty(title);
-		ArgumentException.ThrowIfNullOrEmpty(content);
+		if (string.IsNullOrWhiteSpace(title))
+		{
+			return "Title cannot be null or empty";
+		}
+
+		if (string.IsNullOrWhiteSpace(content))
+		{
+			return "Content cannot be null or empty";
+		}
 
 		Meetup meetup = new()
 		{
@@ -37,6 +44,7 @@ public class MeetupRepository
 
 		await _Db.Meetups.AddAsync(meetup);
 		await _Db.SaveChangesAsync();
+		return Result.Ok<string>();
 	}
 
 	public async Task<Result<Meetup, string>> UpdateMeetupAsync(string id, Option<string> title, Option<string> content, Option<string?> url)
