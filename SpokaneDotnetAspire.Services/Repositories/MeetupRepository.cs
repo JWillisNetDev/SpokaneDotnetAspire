@@ -13,9 +13,9 @@ public class MeetupRepository
 		_Db = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 	}
 
-	public async Task<List<Meetup>> GetMeetupsAsync()
+	public async Task<IList<Meetup>> GetMeetupsAsync()
 	{
-		return await _Db.Meetups.ToListAsync();
+		return await _Db.Meetups.ToArrayAsync();
 	}
 
 	public async Task<Meetup?> GetMeetupById(string id)

@@ -42,10 +42,8 @@ public sealed class Result<E> : Result<Unit, E>
 	{
 	}
 
-	public static Result<E> Ok() => new(default, true);
-	public static Result<E> Err(E error) => new(error, false);
+	public new static Result<E> Err(E error) => new(error, false);
 
-	public static implicit operator Result<E>(Unit _) => Ok();
 	public static implicit operator Result<E>(E error) => Err(error);
 
 	public R Match<R>(Func<R> success, Func<E, R> error)

@@ -30,7 +30,7 @@ public class MeetupRepositoriesTests : UnitTestBase
 			await db.SaveChangesAsync();
 		});
 
-		List<Meetup> actualMeetups = null!;
+		IList<Meetup> actualMeetups = null!;
 		await InDbScopeAsync(async db =>
 		{
 			MeetupRepository repository = new(db);
