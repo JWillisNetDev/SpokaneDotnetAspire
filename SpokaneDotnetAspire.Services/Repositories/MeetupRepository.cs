@@ -4,7 +4,7 @@ using SpokaneDotnetAspire.Services.Data.Models;
 
 namespace SpokaneDotnetAspire.Services.Repositories;
 
-public class MeetupRepository
+public class MeetupRepository : IMeetupRepository
 {
 	private readonly AppDbContext _Db;
 
@@ -13,17 +13,17 @@ public class MeetupRepository
 		_Db = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 	}
 
-	public async Task<IList<Meetup>> GetMeetupsAsync()
+	public async Task<IList<Meetup>> GetMeetupsAsync(CancellationToken cancellationToken = default)
 	{
-		return await _Db.Meetups.ToArrayAsync();
+		return await _Db.Meetups.ToArrayAsync(cancellationToken);
 	}
 
-	public async Task<Meetup?> GetMeetupById(string id)
+	public async Task<Meetup?> GetMeetupByIdAsync(string id, CancellationToken cancellationToken = default)
 	{
-		return await _Db.Meetups.FindAsync(id);
+		return await _Db.Meetups.FindAsync(id, cancellationToken);
 	}
 
-	public async Task<Result<string>> CreateMeetupAsync(string title, string content, string? url)
+	public async Task<Result<string>> CreateMeetupAsync(string title, string content, string? url, CancellationToken cancellationToken = default)
 	{
 		if (string.IsNullOrWhiteSpace(title))
 		{
@@ -42,12 +42,17 @@ public class MeetupRepository
 			MeetupUrl = url,
 		};
 
-		await _Db.Meetups.AddAsync(meetup);
-		await _Db.SaveChangesAsync();
+		await _Db.Meetups.AddAsync(meetup, cancellationToken);
+		await _Db.SaveChangesAsync(cancellationToken);
 		return Result.Ok<string>();
 	}
 
-	public async Task<Result<Meetup, string>> UpdateMeetupAsync(string id, Option<string> title, Option<string> content, Option<string?> url)
+	public async Task<Result<Meetup, string>> UpdateMeetupAsync(
+		string id,
+		Option<string> title,
+		Option<string> content,
+		Option<string?> url,
+		CancellationToken cancellationToken = default)
 	{
 		if (await _Db.Meetups.FindAsync(id) is not { } meetup)
 		{
@@ -74,11 +79,11 @@ public class MeetupRepository
 			meetup.MeetupUrl = newMeetupUrl;
 		}
 
-		await _Db.SaveChangesAsync();
+		await _Db.SaveChangesAsync(cancellationToken);
 		return meetup;
 	}
 
-	public async Task<Result<Meetup, string>> RemoveMeetupAsync(string id)
+	public async Task<Result<Meetup, string>> RemoveMeetupAsync(string id, CancellationToken cancellationToken = default)
 	{
 		if (await _Db.Meetups.FindAsync(id) is not { } meetup)
 		{
@@ -86,7 +91,7 @@ public class MeetupRepository
 		}
 
 		_Db.Meetups.Remove(meetup);
-		await _Db.SaveChangesAsync();
+		await _Db.SaveChangesAsync(cancellationToken);
 		return meetup;
 	}
 }

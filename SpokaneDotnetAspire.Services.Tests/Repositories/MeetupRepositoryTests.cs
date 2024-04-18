@@ -5,7 +5,7 @@ using SpokaneDotnetAspire.Services.Repositories;
 
 namespace SpokaneDotnetAspire.Services.Tests.Repositories;
 
-public class MeetupRepositoriesTests : UnitTestBase
+public class MeetupRepositoryTests : UnitTestBase
 {
 	[Fact]
 	public async Task GetMeetupsAsync_ReturnsMeetups()
@@ -75,7 +75,7 @@ public class MeetupRepositoriesTests : UnitTestBase
 			MeetupRepository repository = new(db);
 
 			// Act
-			actualMeetup = await repository.GetMeetupById(expectedMeetup.Id);
+			actualMeetup = await repository.GetMeetupByIdAsync(expectedMeetup.Id);
 		});
 
 		// Assert
