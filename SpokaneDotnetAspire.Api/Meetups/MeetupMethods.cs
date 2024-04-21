@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
+using SpokaneDotnetAspire.Services;
 using SpokaneDotnetAspire.Services.Data.Models;
 using SpokaneDotnetAspire.Services.Repositories;
 
@@ -8,37 +11,80 @@ namespace SpokaneDotnetAspire.Api.Meetups;
 
 public static class MeetupMethods
 {
-    public static async Task<Ok<MeetupList>> GetMeetupsAsync(
+    public static async Task<Ok<MeetupListDto>> GetMeetupsAsync(
         IMeetupRepository meetupRepository,
         CancellationToken cancellationToken = default)
     {
         var meetups = await meetupRepository.GetMeetupsAsync(cancellationToken);
-
-        return TypedResults.Ok(new MeetupList { Meetups = meetups });
+        return TypedResults.Ok(new MeetupListDto(meetups));
     }
 
-    public static async Task<IResult> CreateMeetupAsync(
-        [FromBody] CreateMeetup meetup,
+    public static async Task<Results<Ok<Meetup>, NotFound>> GetMeetupAsync(
+        [FromRoute] string meetupId,
+        IMeetupRepository meetupRepository,
+        CancellationToken cancellationToken)
+    {
+        if (await meetupRepository.GetMeetupByIdAsync(meetupId, cancellationToken) is { } meetup)
+        {
+            return TypedResults.Ok(meetup);
+        }
+
+        return TypedResults.NotFound();
+    }
+
+    public static async Task<Results<Created, BadRequest<string>>> CreateMeetupAsync(
+        [FromBody] CreateMeetupDto meetupDto,
         IMeetupRepository meetupRepository,
         CancellationToken cancellationToken = default)
     {
         var result =
-            await meetupRepository.CreateMeetupAsync(meetup.Title, meetup.Content, meetup.Url, cancellationToken);
+            await meetupRepository.CreateMeetupAsync(meetupDto.Title, meetupDto.Content, meetupDto.Url, cancellationToken);
 
-        return result.Match<IResult>(
-            TypedResults.Created,
-            TypedResults.BadRequest);
+        return result.Match<Results<Created, BadRequest<string>>>(
+            _ => TypedResults.Created(),
+            err => TypedResults.BadRequest(err));
+    }
+
+    public static async Task<Results<Ok, NotFound>> UpdateMeetupAsync(
+        [FromRoute] string meetupId,
+        [FromBody] UpdateMeetupDto meetupDto,
+        IMeetupRepository meetupRepository,
+        CancellationToken cancellationToken = default)
+    {
+        Option<string?> urlOption = meetupDto.Url is null ? Option.None<string?>() : Option.Some<string?>(meetupDto.Url);
+
+        var result = await meetupRepository.UpdateMeetupAsync(meetupId,
+            meetupDto.Title,
+            meetupDto.Content,
+            urlOption,
+            cancellationToken);
+
+        return result.Match<Results<Ok, NotFound>>(
+            _ => TypedResults.Ok(),
+            _ => TypedResults.NotFound());
+    }
+
+    public static async Task<Results<NoContent, NotFound>> DeleteMeetupAsync(
+        [FromRoute] string meetupId,
+        IMeetupRepository meetupRepository,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await meetupRepository.DeleteMeetupAsync(meetupId, cancellationToken);
+
+        return result.Match<Results<NoContent, NotFound>>(
+            _ => TypedResults.NoContent(),
+            _ => TypedResults.NotFound());
     }
 }
 
-public class CreateMeetup
-{
-    public required string Title { get; init; }
-    public required string Content { get; init; }
-    public string? Url { get; init; } = null;
-}
+public record CreateMeetupDto(
+    [property: Required] string Title,
+    [property: Required] string Content,
+    string? Url);
 
-public class MeetupList
-{
-    public IList<Meetup> Meetups { get; init; } = [];
-}
+public record UpdateMeetupDto(
+    [property: Required] string Title,
+    [property: Required] string Content,
+    string? Url);
+
+public record MeetupListDto(IList<Meetup> Meetups);

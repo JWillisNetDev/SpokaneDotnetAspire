@@ -269,7 +269,7 @@ public class MeetupRepositoryTests : UnitTestBase
 			MeetupRepository repository = new(db);
 
 			// Act
-			var result = await repository.RemoveMeetupAsync(meetupToDelete.Id);
+			var result = await repository.DeleteMeetupAsync(meetupToDelete.Id);
 
 			// Assert
 			result.IsOk.Should().BeTrue();
@@ -302,7 +302,7 @@ public class MeetupRepositoryTests : UnitTestBase
 			MeetupRepository repository = new(db);
 
 			// Act
-			var result = await repository.RemoveMeetupAsync(Guid.Empty.ToString());
+			var result = await repository.DeleteMeetupAsync(Guid.Empty.ToString());
 
 			// Assert
 			result.IsError.Should().BeTrue();
