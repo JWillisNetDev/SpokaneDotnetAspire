@@ -1,0 +1,49 @@
+﻿@inject ISnackbar Snackbar
+
+<MudForm>
+    <MudTextField @bind-Value="_Title"
+                  Label="Meetup Title"
+                  Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="_Description"
+                  Label="Meetup Description"
+                  Lines="6"
+                  Variant="Variant.Outlined" />
+    <MudFileUpload T="IBrowserFile" Accept="image/*" Context="fileInput" FilesChanged="LoadFile" >
+        <ButtonTemplate>
+            <MudButton HtmlTag="label"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.CloudUpload"
+                       for="@fileInput">
+                Upload a Banner Image
+            </MudButton>
+        </ButtonTemplate>
+        <SelectedTemplate>
+            @if (fileInput != null)
+            {
+                <MudText>@fileInput.Name</MudText>
+            }
+            else
+            {
+                <MudText>No File!</MudText>
+            }
+        </SelectedTemplate>
+    </MudFileUpload>
+	
+    @* <MudImage Src="http://127.0.0.1:10000/devstoreaccount1/images/pfp.0ce971fe-c4b7-4e02-9627-7fab0b56f369.png" /> *@
+</MudForm>
+
+@code
+{
+	private string? _Title;
+	private string? _Description;
+	private IBrowserFile? _BannerImage;
+
+    void LoadFile(IBrowserFile? file)
+    {
+        Console.WriteLine("Hello, world!");
+        Snackbar.Add(
+            file?.Name ?? "NOTHING",
+            Severity.Error);
+    }
+}

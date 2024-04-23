@@ -1,9 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
+<MudSnackbarProvider />
 <MudThemingProvider />
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudText Typo="Typo.h5" Class="ml-3">Spokane Dotnet Meetup</MudText>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
@@ -13,7 +14,8 @@
     </MudMainContent>
 </MudLayout>
 
-@code {
+@code
+{
     private bool _drawerOpen = true;
 
     private void DrawerToggle()

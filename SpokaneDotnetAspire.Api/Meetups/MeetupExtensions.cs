@@ -10,8 +10,9 @@ public static class MeetupExtensions
         builder.MapGet("/meetups/{meetupId}", MeetupMethods.GetMeetupAsync)
             .WithName("GetMeetup");
 
-        builder.MapPost("/meetups", MeetupMethods.CreateMeetupAsync)
-            .WithName("CreateMeetup");
+        builder.MapPost("/meetups/create", MeetupMethods.CreateMeetupAsync)
+            .WithName("CreateMeetup")
+            .DisableAntiforgery();
 
         builder.MapPut("/meetups/{meetupId}", MeetupMethods.UpdateMeetupAsync)
             .WithName("UpdateMeetup");

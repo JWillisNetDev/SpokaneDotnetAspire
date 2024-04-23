@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
+using SpokaneDotnetAspire.Api.Storage;
 using SpokaneDotnetAspire.Services;
 using SpokaneDotnetAspire.Services.Data.Models;
 using SpokaneDotnetAspire.Services.Repositories;
@@ -33,12 +34,26 @@ public static class MeetupMethods
     }
 
     public static async Task<Results<Created, BadRequest<string>>> CreateMeetupAsync(
-        [FromBody] CreateMeetupDto meetupDto,
+        [AsParameters] CreateMeetupParams meetupParams,
+        IFormFile imageFormFile,
         IMeetupRepository meetupRepository,
+        IStorageService storageService,
         CancellationToken cancellationToken = default)
     {
-        var result =
-            await meetupRepository.CreateMeetupAsync(meetupDto.Title, meetupDto.Content, meetupDto.Url, cancellationToken);
+        if (!imageFormFile.ContentType.Contains("image"))
+        {
+            return TypedResults.BadRequest("The file must be an image.");
+        }
+
+        // Upload the file first.
+        var imageBinaryData = await BinaryData.FromStreamAsync(imageFormFile.OpenReadStream(), cancellationToken);
+        var blobUrl = await storageService.UploadImageAsync(imageFormFile.FileName, imageBinaryData, cancellationToken);
+        if (blobUrl is null)
+        {
+            return TypedResults.BadRequest("You did something wrong and the blob didn't upload :("); // TODO error message
+        }
+
+        var result = await meetupRepository.CreateMeetupAsync(meetupParams.Title, meetupParams.Content, blobUrl, cancellationToken);
 
         return result.Match<Results<Created, BadRequest<string>>>(
             _ => TypedResults.Created(),
@@ -77,10 +92,9 @@ public static class MeetupMethods
     }
 }
 
-public record CreateMeetupDto(
+public record CreateMeetupParams(
     [property: Required] string Title,
-    [property: Required] string Content,
-    string? Url);
+    [property: Required] string Content);
 
 public record UpdateMeetupDto(
     [property: Required] string Title,

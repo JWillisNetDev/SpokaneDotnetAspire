@@ -6,8 +6,8 @@ public static class Result
 {
     public static Result<T, E> Ok<T, E>(T value) => Result<T, E>.Ok(value);
     public static Result<E> Ok<E>() => Result<E>.Ok();
-    public static Result<T, E> Error<T, E>(E error) => Result<T, E>.Err(error);
-    public static Result<E> Error<E>(E error) => Result<E>.Err(error);
+    public static Result<T, E> Err<T, E>(E error) => Result<T, E>.Err(error);
+    public static Result<E> Err<E>(E error) => Result<E>.Err(error);
 }
 
 public class Result<T, E>
