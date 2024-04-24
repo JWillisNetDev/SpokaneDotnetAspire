@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace SpokaneDotnetAspire.Api.Migrations
+namespace SpokaneDotnetAspire.Services.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

@@ -13,6 +13,6 @@ internal static class AzureClientFactoryBuilderExtensions
         {
             return builder.AddBlobServiceClient(serviceUri);
         }
-        return builder.AddBlobServiceClient(serviceUriOrConnectionString);
+        return builder.AddBlobServiceClient(connectionString: serviceUriOrConnectionString);
     }
 }

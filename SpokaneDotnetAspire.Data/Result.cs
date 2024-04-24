@@ -1,4 +1,4 @@
-﻿namespace SpokaneDotnetAspire.Services;
+﻿namespace SpokaneDotnetAspire.Data;
 
 using Unit = ValueTuple;
 

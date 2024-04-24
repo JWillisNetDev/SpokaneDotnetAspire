@@ -28,7 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SpokaneDotnetAspire.Services\SpokaneDotnetAspire.Services.csproj" />
+    <ProjectReference Include="..\SpokaneDotnetAspire.Api\SpokaneDotnetAspire.Api.csproj" />
+    <ProjectReference Include="..\SpokaneDotnetAspire.Data\SpokaneDotnetAspire.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

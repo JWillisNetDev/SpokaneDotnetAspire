@@ -10,5 +10,10 @@
   <ItemGroup>
     <PackageReference Include="MudBlazor" />
   </ItemGroup>
+
+  
+  <ItemGroup>
+    <ProjectReference Include="..\SpokaneDotnetAspire.Data\SpokaneDotnetAspire.Data.csproj" />
+  </ItemGroup>
   
 </Project>

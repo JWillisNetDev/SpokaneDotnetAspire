@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using SpokaneDotnetAspire.Services.Data;
-using SpokaneDotnetAspire.Services.Data.Models;
+using SpokaneDotnetAspire.Data;
+using SpokaneDotnetAspire.Data.Models;
 
-namespace SpokaneDotnetAspire.Services.Repositories;
+namespace SpokaneDotnetAspire.Api.Repositories;
 
 public class MeetupRepository : IMeetupRepository
 {
@@ -14,9 +14,12 @@ public class MeetupRepository : IMeetupRepository
         _Db = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
-    public async Task<IList<Meetup>> GetMeetupsAsync(CancellationToken cancellationToken = default)
+    public async Task<IList<Meetup>> GetMeetupsAsync(int skip, int take, CancellationToken cancellationToken = default)
     {
-        return await _Db.Meetups.ToArrayAsync(cancellationToken);
+        return await _Db.Meetups
+            .Skip(skip)
+            .Take(take)
+            .ToArrayAsync(cancellationToken);
     }
 
     public async Task<Meetup?> GetMeetupByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -24,7 +27,11 @@ public class MeetupRepository : IMeetupRepository
         return await _Db.Meetups.FindAsync(id, cancellationToken);
     }
 
-    public async Task<Result<string>> CreateMeetupAsync(string title, string content, string? url, CancellationToken cancellationToken = default)
+    public async Task<Result<Meetup, string>> CreateMeetupAsync(string title,
+        string content,
+        string? url,
+        Uri? imageUri,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
@@ -41,11 +48,12 @@ public class MeetupRepository : IMeetupRepository
             Title = title,
             Content = content,
             MeetupUrl = url,
+            ImageUri = imageUri,
         };
 
         await _Db.Meetups.AddAsync(meetup, cancellationToken);
         await _Db.SaveChangesAsync(cancellationToken);
-        return Result.Ok<string>();
+        return meetup;
     }
 
     public async Task<Result<Meetup, string>> UpdateMeetupAsync(

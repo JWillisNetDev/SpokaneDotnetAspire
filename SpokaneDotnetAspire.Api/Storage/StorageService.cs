@@ -22,7 +22,7 @@ public class StorageService : IStorageService
     public async Task EnsureContainersCreatedAsync(CancellationToken cancellationToken = default)
         => await _imageContainerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer, cancellationToken: cancellationToken);
 
-    public async Task<string?> UploadImageAsync(string imageFileName,
+    public async Task<Uri?> UploadImageAsync(string imageFileName,
         BinaryData imageBinaryData,
         CancellationToken cancellationToken = default)
     {
@@ -41,7 +41,7 @@ public class StorageService : IStorageService
         var blob = _imageContainerClient.GetBlobClient(blobName);
         await blob.UploadAsync(imageBinaryData, cancellationToken: cancellationToken);
 
-        return blob.Uri.AbsoluteUri;
+        return blob.Uri;
     }
 
     public async Task DeleteImageAsync(Uri blobUri, CancellationToken cancellationToken = default)

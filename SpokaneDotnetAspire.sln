@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Services", "SpokaneDotnetAspire.Services\SpokaneDotnetAspire.Services.csproj", "{A22E29F6-337F-4F4B-8568-F902D05D0CA9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Api", "SpokaneDotnetAspire.Api\SpokaneDotnetAspire.Api.csproj", "{06E9F0B7-A254-49CA-AAFA-5282F08878A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9815614B-056A-4BD5-A94F-0C70A1D08C46}"
@@ -18,7 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Site", "SpokaneDotnetAspire.Site\SpokaneDotnetAspire.Site.csproj", "{E22E9392-680D-408E-A721-1B7A03B91CDD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Services.Tests", "SpokaneDotnetAspire.Services.Tests\SpokaneDotnetAspire.Services.Tests.csproj", "{D3EF4694-46F5-4B35-A8F5-DA527924BE16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Api.Tests", "SpokaneDotnetAspire.Services.Tests\SpokaneDotnetAspire.Api.Tests.csproj", "{D3EF4694-46F5-4B35-A8F5-DA527924BE16}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Data", "SpokaneDotnetAspire.Data\SpokaneDotnetAspire.Data.csproj", "{F453D219-9E24-4EC9-87E9-36886106C0CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A22E29F6-337F-4F4B-8568-F902D05D0CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A22E29F6-337F-4F4B-8568-F902D05D0CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A22E29F6-337F-4F4B-8568-F902D05D0CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A22E29F6-337F-4F4B-8568-F902D05D0CA9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06E9F0B7-A254-49CA-AAFA-5282F08878A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06E9F0B7-A254-49CA-AAFA-5282F08878A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06E9F0B7-A254-49CA-AAFA-5282F08878A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,6 +38,10 @@ Global
 		{D3EF4694-46F5-4B35-A8F5-DA527924BE16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3EF4694-46F5-4B35-A8F5-DA527924BE16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3EF4694-46F5-4B35-A8F5-DA527924BE16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F453D219-9E24-4EC9-87E9-36886106C0CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F453D219-9E24-4EC9-87E9-36886106C0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F453D219-9E24-4EC9-87E9-36886106C0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F453D219-9E24-4EC9-87E9-36886106C0CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
