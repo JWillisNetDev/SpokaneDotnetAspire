@@ -18,8 +18,6 @@ public class MeetupService : IMeetupService
 
     public async Task<List<Meetup>> GetMeetupsAsync(int page = 0, int pageSize = 10, CancellationToken cancellationToken = default)
     {
-        // Make the request
-        await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
         var response = await _http.GetAsync($"/meetups?page={page}&pagesize={pageSize}", cancellationToken);
         response.EnsureSuccessStatusCode();
 
