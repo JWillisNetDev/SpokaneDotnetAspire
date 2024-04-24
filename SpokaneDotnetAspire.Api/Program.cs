@@ -22,8 +22,7 @@ builder.Services.AddOpenTelemetry()
     {
         configure
             .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddConsoleExporter();
+            .AddHttpClientInstrumentation();
     })
     .WithTracing(configure =>
     {

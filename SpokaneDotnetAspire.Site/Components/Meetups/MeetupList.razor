@@ -1,0 +1,43 @@
+﻿@inject IMeetupService Meetup
+@rendermode InteractiveServer
+
+@if (_Meetups is not null)
+{
+    <MudTable Items="@_Meetups">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Title</MudTh>
+            <MudTh>Content</MudTh>
+            <MudTh>Meetup Url</MudTh>
+            <MudTh>Image</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+			<MudTd>@context.Id</MudTd>
+			<MudTd>@context.Title</MudTd>
+            <MudTd>@context.Content</MudTd>
+            <MudTd><a href="@context.MeetupUrl">Meetup Url <MudIcon Icon="@Icons.Material.Filled.Link" /></a></MudTd>
+            <MudTd><MudImage Src="@context.ImageUri?.AbsoluteUri" /></MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+else
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+
+
+@code
+{
+    private int _Page = 0;
+    private int _PageSize = 10;
+	private List<Meetup>? _Meetups = null;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _Meetups = await Meetup.GetMeetupsAsync(_Page, _PageSize);
+		    StateHasChanged();
+        }
+    }
+}

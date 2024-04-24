@@ -12,13 +12,13 @@ namespace SpokaneDotnetAspire.Api.Meetups;
 
 public sealed class MeetupMethods
 {
-    public static async Task<Ok<MeetupListDto>> GetMeetupsAsync(
+    public static async Task<Ok<IList<Meetup>>> GetMeetupsAsync(
         [AsParameters] GetMeetupsParams @params,
         IMeetupRepository meetupRepository,
         CancellationToken cancellationToken = default)
     {
         var meetups = await meetupRepository.GetMeetupsAsync(@params.Page * @params.PageSize, @params.PageSize, cancellationToken);
-        return TypedResults.Ok(new MeetupListDto(meetups));
+        return TypedResults.Ok(meetups);
     }
 
     public static async Task<Results<Ok<Meetup>, NotFound>> GetMeetupAsync(
@@ -35,17 +35,17 @@ public sealed class MeetupMethods
     }
 
     public static async Task<Results<Created, BadRequest<string>>> CreateMeetupAsync(
-        [AsParameters] CreateMeetupParams @params,
+        [AsParameters] CreateMeetupForm form,
         IMeetupRepository meetupRepository,
         IStorageService storageService,
         ILogger<MeetupMethods> logger,
         CancellationToken cancellationToken = default)
     {
-        logger.LogTrace("Create new meetup {meetupTitle} at {at}", @params.Title, DateTimeOffset.UtcNow);
+        logger.LogTrace("Create new meetup {meetupTitle} at {at}", form.Title, DateTimeOffset.UtcNow);
 
         // Upload the file first.
         Uri? blobUri = null;
-        if (@params.ImageFile is { } imageFile)
+        if (form.ImageFile is { } imageFile)
         {
             if (!imageFile.ContentType.Contains("image"))
             {
@@ -56,11 +56,11 @@ public sealed class MeetupMethods
             blobUri = await storageService.UploadImageAsync(imageFile.FileName, imageBinaryData, cancellationToken);
             if (blobUri is null)
             {
-                logger.LogWarning("Failed to upload image: {imageBinaryData} {meetupTitle}, {at}", imageBinaryData, @params.Title, DateTimeOffset.UtcNow);
+                logger.LogWarning("Failed to upload image: {imageBinaryData} {meetupTitle}, {at}", imageBinaryData, form.Title, DateTimeOffset.UtcNow);
             }
         }
 
-        var result = await meetupRepository.CreateMeetupAsync(@params.Title, @params.Content, @params.MeetupUrl, blobUri, cancellationToken);
+        var result = await meetupRepository.CreateMeetupAsync(form.Title, form.Content, form.MeetupUrl, blobUri, cancellationToken);
 
         return result.Match<Results<Created, BadRequest<string>>>(
             created =>
@@ -107,7 +107,7 @@ public record GetMeetupsParams(
     int Page,
     int PageSize);
 
-public record CreateMeetupParams(
+public record CreateMeetupForm(
     [property: Required, FromForm] string Title,
     [property: Required, FromForm] string Content,
     [FromForm] string? MeetupUrl,
@@ -117,5 +117,3 @@ public record UpdateMeetupDto(
     [property: Required] string Title,
     [property: Required] string Content,
     string? MeetupUrl);
-
-public record MeetupListDto(IList<Meetup> Meetups);
