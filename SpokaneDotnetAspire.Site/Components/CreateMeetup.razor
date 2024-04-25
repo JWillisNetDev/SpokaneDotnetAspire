@@ -1,49 +1,96 @@
-﻿@inject ISnackbar Snackbar
+﻿@using System.ComponentModel.DataAnnotations
+@using SpokaneDotnetAspire.Data.Dtos.Model
+@rendermode InteractiveServer
+@inject ISnackbar Snackbar
+@inject IMeetupService MeetupService
 
-<MudForm>
-    <MudTextField @bind-Value="_Title"
-                  Label="Meetup Title"
-                  Variant="Variant.Outlined" />
-    <MudTextField @bind-Value="_Description"
-                  Label="Meetup Description"
-                  Lines="6"
-                  Variant="Variant.Outlined" />
-    <MudFileUpload T="IBrowserFile" Accept="image/*" Context="fileInput" FilesChanged="LoadFile" >
-        <ButtonTemplate>
-            <MudButton HtmlTag="label"
-                       Variant="Variant.Filled"
+<MudSnackbarProvider />
+
+<EditForm Model="@_Model" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <MudCard>
+        <MudCardContent>
+            <MudTextField @bind-Value="@_Model.Title"
+                          For="@(() => _Model.Title)"
+                          Label="Meetup Title"
+                          Variant="Variant.Outlined" />
+            <MudTextField @bind-Value="@_Model.Content"
+                          For="@(() => _Model.Content)"
+                          Label="Meetup Description"
+                          Lines="6"
+                          Variant="Variant.Outlined" />
+            <MudFileUpload T="IBrowserFile" 
+                           Accept="image/*" 
+                           Context="fileInput"
+						   For="@(() => _Model.MeetupImageFile)"
+                           @bind-Files="@_Model.MeetupImageFile">
+                <ButtonTemplate>
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload"
+                               for="@fileInput">
+                        Upload a Banner Image
+                    </MudButton>
+                </ButtonTemplate>
+                <SelectedTemplate>
+                    @if (fileInput != null)
+                    {
+                        <MudText>@fileInput.Name</MudText>
+                    }
+                    else
+                    {
+                        <MudText>No File!</MudText>
+                    }
+                </SelectedTemplate>
+            </MudFileUpload>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
-                       StartIcon="@Icons.Material.Filled.CloudUpload"
-                       for="@fileInput">
-                Upload a Banner Image
+                       ButtonType="ButtonType.Submit"
+                       StartIcon="@Icons.Material.Filled.Create">
+                Create Meetup
             </MudButton>
-        </ButtonTemplate>
-        <SelectedTemplate>
-            @if (fileInput != null)
-            {
-                <MudText>@fileInput.Name</MudText>
-            }
-            else
-            {
-                <MudText>No File!</MudText>
-            }
-        </SelectedTemplate>
-    </MudFileUpload>
-	
-    @* <MudImage Src="http://127.0.0.1:10000/devstoreaccount1/images/pfp.0ce971fe-c4b7-4e02-9627-7fab0b56f369.png" /> *@
-</MudForm>
+        </MudCardActions>
+    </MudCard>
+    <MudCard>
+        <MudText>
+            <ValidationSummary />
+        </MudText>
+    </MudCard>
+</EditForm>
 
 @code
 {
-	private string? _Title;
-	private string? _Description;
-	private IBrowserFile? _BannerImage;
+    private CreateMeetupModel _Model = new();
 
-    void LoadFile(IBrowserFile? file)
+    private class CreateMeetupModel
     {
-        Console.WriteLine("Hello, world!");
-        Snackbar.Add(
-            file?.Name ?? "NOTHING",
-            Severity.Error);
+        [Required]
+		[StringLength(128, ErrorMessage = "Title cannot be more than 128 characters long.", MinimumLength = 1)]
+		public string Title { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(2000, ErrorMessage = "Content cannot be more than 2,000 characters long.", MinimumLength = 1)]
+		public string Content { get; set; } = string.Empty;
+
+        public string? MeetupUrl { get; set; }
+
+        public IBrowserFile? MeetupImageFile { get; set; }
+        public string? MeetupImageUri { get; set; }
+    }
+
+    private async Task OnValidSubmitAsync(EditContext context)
+    {
+        Snackbar.Add("Creating Meetup...", Severity.Info);
+
+        if (_Model.MeetupImageFile is { } imageFile)
+        {
+            CreateMeetupDto dto = new(_Model.Title, _Model.Content, _Model.MeetupUrl, null);
+            var createdMeetup = await MeetupService.CreateMeetupWithImageAsync(dto, imageFile);
+
+            Snackbar.Add($"Created new meetup '{createdMeetup.Title}'", Severity.Success);
+        }
     }
 }

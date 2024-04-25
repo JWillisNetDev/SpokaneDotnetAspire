@@ -2,11 +2,11 @@
 
 using SpokaneDotnetAspire.Api.Services.Storage;
 
-namespace SpokaneDotnetAspire.Api.ImageUpload;
+namespace SpokaneDotnetAspire.Api.Endpoints.ImageUpload;
 
 public sealed class ImageUploadMethods
 {
-    public static async Task<Results<Ok<Uri>, BadRequest<string>>> UploadImageAsync(
+    public static async Task<Results<Ok<string>, BadRequest<string>>> UploadImageAsync(
         IFormFile file,
         IStorageService storageService,
         ILogger<ImageUploadMethods> logger,
@@ -27,6 +27,6 @@ public sealed class ImageUploadMethods
         logger.LogInformation("Created image in storage with uri {blobUri} at {at}",
             blobUri, DateTimeOffset.UtcNow);
 
-        return TypedResults.Ok(blobUri);
+        return TypedResults.Ok(blobUri.AbsoluteUri);
     }
 }

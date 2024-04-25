@@ -4,8 +4,8 @@ using Microsoft.Extensions.Azure;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
-using SpokaneDotnetAspire.Api.ImageUpload;
-using SpokaneDotnetAspire.Api.Meetups;
+using SpokaneDotnetAspire.Api.Endpoints.ImageUpload;
+using SpokaneDotnetAspire.Api.Endpoints.Meetups;
 using SpokaneDotnetAspire.Api.Services.Repositories;
 using SpokaneDotnetAspire.Api.Services.Storage;
 using SpokaneDotnetAspire.Data;

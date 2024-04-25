@@ -1,4 +1,4 @@
-﻿namespace SpokaneDotnetAspire.Api.ImageUpload;
+﻿namespace SpokaneDotnetAspire.Api.Endpoints.ImageUpload;
 
 public static class ImageUploadExtensions
 {

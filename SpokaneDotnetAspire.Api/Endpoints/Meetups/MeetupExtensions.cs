@@ -1,4 +1,4 @@
-﻿namespace SpokaneDotnetAspire.Api.Meetups;
+﻿namespace SpokaneDotnetAspire.Api.Endpoints.Meetups;
 
 public static class MeetupExtensions
 {
@@ -24,5 +24,4 @@ public static class MeetupExtensions
 
         return builder;
     }
-
 }

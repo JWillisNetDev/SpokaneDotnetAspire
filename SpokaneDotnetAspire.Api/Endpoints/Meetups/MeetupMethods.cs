@@ -6,7 +6,7 @@ using SpokaneDotnetAspire.Data;
 using SpokaneDotnetAspire.Data.Dtos.Model;
 using SpokaneDotnetAspire.Data.Models;
 
-namespace SpokaneDotnetAspire.Api.Meetups;
+namespace SpokaneDotnetAspire.Api.Endpoints.Meetups;
 
 public sealed class MeetupMethods
 {
@@ -32,7 +32,7 @@ public sealed class MeetupMethods
         return TypedResults.NotFound();
     }
 
-    public static async Task<Results<Created, BadRequest<string>>> CreateMeetupAsync(
+    public static async Task<Results<CreatedAtRoute, BadRequest<string>>> CreateMeetupAsync( // TODO Use RedirectAtRoute
         [FromBody] CreateMeetupDto dto,
         IMeetupRepository meetupRepository,
         ILogger<MeetupMethods> logger,
@@ -40,13 +40,18 @@ public sealed class MeetupMethods
     {
         logger.LogTrace("Creating new meetup {meetupTitle} at {at}", dto.Title, DateTimeOffset.UtcNow);
 
-        var result = await meetupRepository.CreateMeetupAsync(dto.Title, dto.Content, dto.MeetupUrl, dto.ImageUri, cancellationToken);
+        var result = await meetupRepository.CreateMeetupAsync(
+            dto.Title,
+            dto.Content,
+            dto.MeetupUrl,
+            dto.ImageUri,
+            cancellationToken);
 
-        return result.Match<Results<Created, BadRequest<string>>>(
+        return result.Match<Results<CreatedAtRoute, BadRequest<string>>>(
             created =>
             {
                 logger.LogInformation("Created new meetup {meetupId} at {at}", created.Id, DateTimeOffset.UtcNow);
-                return TypedResults.Created();
+                return TypedResults.CreatedAtRoute("GetMeetup", new { meetupId = created.Id });
             },
             err => TypedResults.BadRequest(err));
     }
@@ -58,8 +63,10 @@ public sealed class MeetupMethods
         CancellationToken cancellationToken = default)
     {
         Option<string?> urlOption = meetupDto.MeetupUrl is null ? Option.None<string?>() : Option.Some<string?>(meetupDto.MeetupUrl);
+        // TODO handle image url update
 
-        var result = await meetupRepository.UpdateMeetupAsync(meetupId,
+        var result = await meetupRepository.UpdateMeetupAsync(
+            meetupId,
             meetupDto.Title,
             meetupDto.Content,
             urlOption,
