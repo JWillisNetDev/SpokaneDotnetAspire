@@ -4,6 +4,7 @@ using Microsoft.Extensions.Azure;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
+using SpokaneDotnetAspire.Api.ImageUpload;
 using SpokaneDotnetAspire.Api.Meetups;
 using SpokaneDotnetAspire.Api.Services.Repositories;
 using SpokaneDotnetAspire.Api.Services.Storage;
@@ -52,8 +53,7 @@ builder.Services.AddTransient<IMeetupRepository, MeetupRepository>();
 builder.Services.AddAzureClients(clientBuilder
     => clientBuilder.AddBlobServiceClient(builder.Configuration["StorageConnectionString:blob"]!));
 
-builder.Services.AddOptions<StorageOptions>()
-    .Bind(builder.Configuration.GetSection("StorageOptions"));
+builder.Services.AddOptions<StorageOptions>().Bind(builder.Configuration.GetSection("StorageOptions"));
 builder.Services.AddSingleton<IStorageService, StorageService>();
 
 var app = builder.Build();
@@ -78,6 +78,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapMeetupEndpoints();
+app.MapMeetupEndpoints()
+    .MapImageUploadEndpoints();
 
 app.Run();

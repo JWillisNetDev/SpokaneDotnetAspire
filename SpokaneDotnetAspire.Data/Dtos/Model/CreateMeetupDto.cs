@@ -5,4 +5,5 @@ namespace SpokaneDotnetAspire.Data.Dtos.Model;
 public record CreateMeetupDto(
     [Required] string Title,
     [Required] string Content,
-    string? MeetupUrl);
+    string? MeetupUrl,
+    Uri? ImageUri);

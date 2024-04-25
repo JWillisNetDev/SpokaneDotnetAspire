@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 
 using SpokaneDotnetAspire.Api.Services.Repositories;
-using SpokaneDotnetAspire.Api.Services.Storage;
 using SpokaneDotnetAspire.Data;
 using SpokaneDotnetAspire.Data.Dtos.Model;
 using SpokaneDotnetAspire.Data.Models;
@@ -34,38 +33,19 @@ public sealed class MeetupMethods
     }
 
     public static async Task<Results<Created, BadRequest<string>>> CreateMeetupAsync(
-        [AsParameters] CreateMeetupDto dto,
-        [FromForm] IFormFile? imageFile,
+        [FromBody] CreateMeetupDto dto,
         IMeetupRepository meetupRepository,
-        IStorageService storageService,
         ILogger<MeetupMethods> logger,
         CancellationToken cancellationToken = default)
     {
-        logger.LogTrace("Create new meetup {meetupTitle} at {at}", dto.Title, DateTimeOffset.UtcNow);
+        logger.LogTrace("Creating new meetup {meetupTitle} at {at}", dto.Title, DateTimeOffset.UtcNow);
 
-        // Upload the file first.
-        Uri? blobUri = null;
-        if (imageFile is not null)
-        {
-            if (!imageFile.ContentType.Contains("image"))
-            {
-                return TypedResults.BadRequest("The file must be an image.");
-            }
-
-            var imageBinaryData = await BinaryData.FromStreamAsync(imageFile.OpenReadStream(), cancellationToken);
-            blobUri = await storageService.UploadImageAsync(imageFile.FileName, imageBinaryData, cancellationToken);
-            if (blobUri is null)
-            {
-                logger.LogWarning("Failed to upload image: {imageBinaryData} {meetupTitle}, {at}", imageBinaryData, dto.Title, DateTimeOffset.UtcNow);
-            }
-        }
-
-        var result = await meetupRepository.CreateMeetupAsync(dto.Title, dto.Content, dto.MeetupUrl, blobUri, cancellationToken);
+        var result = await meetupRepository.CreateMeetupAsync(dto.Title, dto.Content, dto.MeetupUrl, dto.ImageUri, cancellationToken);
 
         return result.Match<Results<Created, BadRequest<string>>>(
             created =>
             {
-                logger.LogTrace("Created new meetup {meetupId} at {at}", created.Id, DateTimeOffset.UtcNow);
+                logger.LogInformation("Created new meetup {meetupId} at {at}", created.Id, DateTimeOffset.UtcNow);
                 return TypedResults.Created();
             },
             err => TypedResults.BadRequest(err));

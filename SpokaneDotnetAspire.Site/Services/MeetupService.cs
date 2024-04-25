@@ -33,5 +33,4 @@ public class MeetupService : IMeetupService
         var meetup = await response.Content.ReadFromJsonAsync<Meetup>(cancellationToken: token);
         return meetup;
     }
-
 }

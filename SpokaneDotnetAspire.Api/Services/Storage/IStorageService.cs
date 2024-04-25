@@ -3,7 +3,7 @@
 public interface IStorageService
 {
     public Task EnsureContainersCreatedAsync(CancellationToken cancellationToken = default);
-    public Task<Uri?> UploadImageAsync(
+    public Task<Uri> UploadImageAsync(
         string imageFileName,
         BinaryData imageBinaryData,
         CancellationToken cancellationToken = default);

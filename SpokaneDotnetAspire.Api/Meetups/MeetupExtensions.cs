@@ -4,22 +4,22 @@ public static class MeetupExtensions
 {
     public static IEndpointRouteBuilder MapMeetupEndpoints(this IEndpointRouteBuilder builder)
     {
-        builder = builder.MapGroup("/meetups");
+        var group = builder.MapGroup("/meetups");
 
-        builder.MapGet("/", MeetupMethods.GetMeetupsAsync)
+        group.MapGet("/", MeetupMethods.GetMeetupsAsync)
             .WithName("GetMeetups");
 
-        builder.MapGet("/{meetupId}", MeetupMethods.GetMeetupAsync)
+        group.MapGet("/{meetupId}", MeetupMethods.GetMeetupAsync)
             .WithName("GetMeetup");
 
-        builder.MapPost("/create", MeetupMethods.CreateMeetupAsync)
+        group.MapPost("/create", MeetupMethods.CreateMeetupAsync)
             .WithName("CreateMeetup")
             .DisableAntiforgery();
 
-        builder.MapPut("/{meetupId}", MeetupMethods.UpdateMeetupAsync)
+        group.MapPut("/{meetupId}", MeetupMethods.UpdateMeetupAsync)
             .WithName("UpdateMeetup");
 
-        builder.MapDelete("/{meetupId}", MeetupMethods.DeleteMeetupAsync)
+        group.MapDelete("/{meetupId}", MeetupMethods.DeleteMeetupAsync)
             .WithName("DeleteMeetup");
 
         return builder;
