@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
-using SpokaneDotnetAspire.Api.Repositories;
-using SpokaneDotnetAspire.Api.Storage;
+using SpokaneDotnetAspire.Api.Services.Repositories;
+using SpokaneDotnetAspire.Api.Services.Storage;
 using SpokaneDotnetAspire.Data;
+using SpokaneDotnetAspire.Data.Dtos.Model;
 using SpokaneDotnetAspire.Data.Models;
 
 namespace SpokaneDotnetAspire.Api.Meetups;
@@ -35,17 +34,18 @@ public sealed class MeetupMethods
     }
 
     public static async Task<Results<Created, BadRequest<string>>> CreateMeetupAsync(
-        [AsParameters] CreateMeetupForm form,
+        [AsParameters] CreateMeetupDto dto,
+        [FromForm] IFormFile? imageFile,
         IMeetupRepository meetupRepository,
         IStorageService storageService,
         ILogger<MeetupMethods> logger,
         CancellationToken cancellationToken = default)
     {
-        logger.LogTrace("Create new meetup {meetupTitle} at {at}", form.Title, DateTimeOffset.UtcNow);
+        logger.LogTrace("Create new meetup {meetupTitle} at {at}", dto.Title, DateTimeOffset.UtcNow);
 
         // Upload the file first.
         Uri? blobUri = null;
-        if (form.ImageFile is { } imageFile)
+        if (imageFile is not null)
         {
             if (!imageFile.ContentType.Contains("image"))
             {
@@ -56,11 +56,11 @@ public sealed class MeetupMethods
             blobUri = await storageService.UploadImageAsync(imageFile.FileName, imageBinaryData, cancellationToken);
             if (blobUri is null)
             {
-                logger.LogWarning("Failed to upload image: {imageBinaryData} {meetupTitle}, {at}", imageBinaryData, form.Title, DateTimeOffset.UtcNow);
+                logger.LogWarning("Failed to upload image: {imageBinaryData} {meetupTitle}, {at}", imageBinaryData, dto.Title, DateTimeOffset.UtcNow);
             }
         }
 
-        var result = await meetupRepository.CreateMeetupAsync(form.Title, form.Content, form.MeetupUrl, blobUri, cancellationToken);
+        var result = await meetupRepository.CreateMeetupAsync(dto.Title, dto.Content, dto.MeetupUrl, blobUri, cancellationToken);
 
         return result.Match<Results<Created, BadRequest<string>>>(
             created =>
@@ -106,14 +106,3 @@ public sealed class MeetupMethods
 public record GetMeetupsParams(
     int Page,
     int PageSize);
-
-public record CreateMeetupForm(
-    [property: Required, FromForm] string Title,
-    [property: Required, FromForm] string Content,
-    [FromForm] string? MeetupUrl,
-    [FromForm] IFormFile? ImageFile);
-
-public record UpdateMeetupDto(
-    [property: Required] string Title,
-    [property: Required] string Content,
-    string? MeetupUrl);

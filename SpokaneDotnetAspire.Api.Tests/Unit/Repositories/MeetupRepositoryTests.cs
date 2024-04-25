@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-using SpokaneDotnetAspire.Api.Repositories;
+using SpokaneDotnetAspire.Api.Services.Repositories;
 using SpokaneDotnetAspire.Data;
 using SpokaneDotnetAspire.Data.Models;
 

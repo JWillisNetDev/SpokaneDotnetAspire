@@ -1,7 +1,7 @@
 ﻿using SpokaneDotnetAspire.Data;
 using SpokaneDotnetAspire.Data.Models;
 
-namespace SpokaneDotnetAspire.Api.Repositories;
+namespace SpokaneDotnetAspire.Api.Services.Repositories;
 
 public interface IMeetupRepository
 {

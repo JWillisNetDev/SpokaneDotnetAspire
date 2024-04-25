@@ -3,7 +3,7 @@ using Azure.Storage.Blobs.Models;
 
 using Microsoft.Extensions.Options;
 
-namespace SpokaneDotnetAspire.Api.Storage;
+namespace SpokaneDotnetAspire.Api.Services.Storage;
 
 public class StorageService : IStorageService
 {

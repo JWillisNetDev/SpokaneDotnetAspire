@@ -1,4 +1,4 @@
-﻿namespace SpokaneDotnetAspire.Api.Storage;
+﻿namespace SpokaneDotnetAspire.Api.Services.Storage;
 
 public interface IStorageService
 {

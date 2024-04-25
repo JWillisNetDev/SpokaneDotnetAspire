@@ -3,7 +3,9 @@ using Azure.Storage.Blobs;
 
 using Microsoft.Extensions.Azure;
 
-namespace SpokaneDotnetAspire.Api.Storage;
+using SpokaneDotnetAspire.Api.Services.Storage;
+
+namespace SpokaneDotnetAspire.Api.Services.Storage;
 
 internal static class AzureClientFactoryBuilderExtensions
 {

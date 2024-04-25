@@ -24,9 +24,14 @@ public class MeetupService : IMeetupService
         var meetups = await response.Content.ReadFromJsonAsync<List<Meetup>>(cancellationToken: cancellationToken);
         return meetups ?? [];
     }
-}
 
-public record UpdateMeetupDto(
-    string Title,
-    string Content,
-    string? MeetupUrl);
+    public async Task<Meetup?> GetMeetupAsync(string meetupId, CancellationToken token)
+    {
+        var response = await _http.GetAsync($"/meetups/{meetupId}", token);
+        response.EnsureSuccessStatusCode();
+
+        var meetup = await response.Content.ReadFromJsonAsync<Meetup>(cancellationToken: token);
+        return meetup;
+    }
+
+}

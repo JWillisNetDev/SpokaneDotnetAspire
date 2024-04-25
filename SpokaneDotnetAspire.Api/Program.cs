@@ -5,8 +5,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
 using SpokaneDotnetAspire.Api.Meetups;
-using SpokaneDotnetAspire.Api.Repositories;
-using SpokaneDotnetAspire.Api.Storage;
+using SpokaneDotnetAspire.Api.Services.Repositories;
+using SpokaneDotnetAspire.Api.Services.Storage;
 using SpokaneDotnetAspire.Data;
 
 var builder = WebApplication.CreateBuilder(args);
