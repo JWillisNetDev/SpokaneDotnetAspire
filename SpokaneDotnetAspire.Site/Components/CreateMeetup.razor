@@ -1,10 +1,7 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @using SpokaneDotnetAspire.Data.Dtos.Model
 @rendermode InteractiveServer
-@inject ISnackbar Snackbar
 @inject IMeetupService MeetupService
-
-<MudSnackbarProvider />
 
 <EditForm Model="@_Model" OnValidSubmit="OnValidSubmitAsync">
     <DataAnnotationsValidator />
@@ -63,6 +60,9 @@
 
 @code
 {
+	[Parameter]
+	public EventCallback<Meetup> OnCreate { get; set; } = EventCallback<Meetup>.Empty;
+
     private CreateMeetupModel _Model = new();
 
     private class CreateMeetupModel
@@ -83,14 +83,13 @@
 
     private async Task OnValidSubmitAsync(EditContext context)
     {
-        Snackbar.Add("Creating Meetup...", Severity.Info);
-
         if (_Model.MeetupImageFile is { } imageFile)
         {
             CreateMeetupDto dto = new(_Model.Title, _Model.Content, _Model.MeetupUrl, null);
             var createdMeetup = await MeetupService.CreateMeetupWithImageAsync(dto, imageFile);
 
-            Snackbar.Add($"Created new meetup '{createdMeetup.Title}'", Severity.Success);
+            _Model = new();
+			await OnCreate.InvokeAsync(createdMeetup);
         }
     }
 }

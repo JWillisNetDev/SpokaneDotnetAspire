@@ -1,13 +1,13 @@
 ﻿@using SpokaneDotnetAspire.Site.Components.Meetups
+@rendermode InteractiveServer
 
 @page "/create-meetup"
 
-<PageTitle>Create a Meetup</PageTitle>
-<MudContainer Class="mb-4">
-    <CreateMeetup />
-</MudContainer>
+<PageTitle>Meetups</PageTitle>
 
-<MudContainer>
+<MudContainer Class="mb-4">
     <MudText Class="m-auto" Typo="Typo.h3">Create a New Meetup</MudText>
+    <CreateMeetup OnCreate="@(_ => StateHasChanged())" />
+    <MudDivider />
     <MeetupList />
 </MudContainer>

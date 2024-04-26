@@ -3,22 +3,13 @@
 
 @if (_Meetups is not null)
 {
-    <MudTable Items="@_Meetups">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Title</MudTh>
-            <MudTh>Content</MudTh>
-            <MudTh>Meetup Url</MudTh>
-            <MudTh>Image</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-			<MudTd>@context.Id</MudTd>
-			<MudTd>@context.Title</MudTd>
-            <MudTd>@context.Content</MudTd>
-            <MudTd><a href="@context.MeetupUrl">Meetup Url <MudIcon Icon="@Icons.Material.Filled.Link" /></a></MudTd>
-            <MudTd><MudImage Src="@context.ImageUri?.AbsoluteUri" /></MudTd>
-        </RowTemplate>
-    </MudTable>
+    @foreach (var meetup in _Meetups)
+    {
+        <MeetupItem
+			@key="@(meetup.Id)"
+            Meetup="@meetup"
+            OnDelete="DeleteMeetup" />
+    }
 }
 else
 {
@@ -36,10 +27,19 @@ else
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            _Meetups = await Meetup.GetMeetupsAsync(_Page, _PageSize);
-		    StateHasChanged();
-        }
+        _Meetups = await GetMeetupsAsync();
+		StateHasChanged();
+    }
+
+    private async Task DeleteMeetup(Meetup meetup)
+    {
+        await Meetup.DeleteMeetupAsync(meetup);
+        _Meetups = await GetMeetupsAsync();
+        StateHasChanged();
+    }
+
+    private async Task<List<Meetup>> GetMeetupsAsync()
+    {
+	    return await Meetup.GetMeetupsAsync(_Page, _PageSize);
     }
 }

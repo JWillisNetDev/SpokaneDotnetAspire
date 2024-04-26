@@ -14,5 +14,5 @@ public interface IMeetupService
         CancellationToken cancellationToken = default);
     Task<Meetup> CreateMeetupAsync(CreateMeetupDto dto, CancellationToken cancellationToken = default);
     Task<Meetup> UpdateMeetupAsync(CancellationToken cancellationToken = default);
-    Task DeleteMeetupAsync(CancellationToken cancellationToken = default);
+    Task<bool> DeleteMeetupAsync(Meetup meetup, CancellationToken cancellationToken = default);
 }

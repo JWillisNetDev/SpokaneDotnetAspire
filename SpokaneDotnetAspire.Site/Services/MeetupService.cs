@@ -74,8 +74,9 @@ public class MeetupService : IMeetupService
     {
         throw new NotImplementedException();
     }
-    public async Task DeleteMeetupAsync(CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteMeetupAsync(Meetup meetup, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var response = await _http.DeleteAsync($"meetups/{meetup.Id}", cancellationToken);
+        return response.IsSuccessStatusCode;
     }
 }
