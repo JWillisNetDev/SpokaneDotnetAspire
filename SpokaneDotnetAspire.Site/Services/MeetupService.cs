@@ -34,7 +34,8 @@ public class MeetupService : IMeetupService
         return meetup;
     }
 
-    public async Task<Meetup> CreateMeetupWithImageAsync(CreateMeetupDto dto,
+    public async Task<Meetup> CreateMeetupWithImageAsync(
+        CreateMeetupDto dto,
         IBrowserFile file,
         CancellationToken cancellationToken = default)
     {
@@ -54,26 +55,26 @@ public class MeetupService : IMeetupService
         // Now, we want to create the meetup.
         dto = dto with { ImageUri = imageUri };
 
-        var createMeetupResponse = await _http.PostAsJsonAsync("/meetups/create", dto, cancellationToken);
-        createMeetupResponse.EnsureSuccessStatusCode();
-
-        // Finally, we get the created meetup from the response location.
-        var getMeetupResponse = await _http.GetAsync(createMeetupResponse.Headers.Location, cancellationToken);
-        getMeetupResponse.EnsureSuccessStatusCode();
-
-        var meetup = await getMeetupResponse.Content.ReadFromJsonAsync<Meetup>(cancellationToken: cancellationToken);
-        return meetup!;
+        return await CreateMeetupAsync(dto, cancellationToken);
     }
 
     public async Task<Meetup> CreateMeetupAsync(CreateMeetupDto dto, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var createResponse = await _http.PostAsJsonAsync("/meetups/create", dto, cancellationToken);
+        createResponse.EnsureSuccessStatusCode();
+
+        var getResponse = await _http.GetAsync(createResponse.Headers.Location, cancellationToken);
+        getResponse.EnsureSuccessStatusCode();
+
+        var meetup = await getResponse.Content.ReadFromJsonAsync<Meetup>(cancellationToken: cancellationToken);
+        return meetup!;
     }
 
     public async Task<Meetup> UpdateMeetupAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
+
     public async Task<bool> DeleteMeetupAsync(Meetup meetup, CancellationToken cancellationToken = default)
     {
         var response = await _http.DeleteAsync($"meetups/{meetup.Id}", cancellationToken);
