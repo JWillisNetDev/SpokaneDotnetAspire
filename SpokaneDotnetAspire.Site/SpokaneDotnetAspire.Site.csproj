@@ -14,6 +14,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\SpokaneDotnetAspire.Data\SpokaneDotnetAspire.Data.csproj" />
+    <ProjectReference Include="..\SpokaneDotnetAspire.ServiceDefaults\SpokaneDotnetAspire.ServiceDefaults.csproj" />
   </ItemGroup>
   
 </Project>

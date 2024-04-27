@@ -8,6 +8,8 @@ using SpokaneDotnetAspire.Site.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -31,6 +33,8 @@ builder.Services.AddHttpClient<IMeetupService, MeetupService>((isp, configure) =
 });
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

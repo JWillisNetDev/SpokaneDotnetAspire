@@ -20,6 +20,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Data", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.Api.Tests", "SpokaneDotnetAspire.Api.Tests\SpokaneDotnetAspire.Api.Tests.csproj", "{35BDB9DD-6B2B-488D-8BD1-23C23C09F56A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpokaneDotnetAspire.AppHost", "SpokaneDotnetAspire.AppHost\SpokaneDotnetAspire.AppHost.csproj", "{7649FC9C-05A5-455D-B32E-1474AD89CCA9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpokaneDotnetAspire.ServiceDefaults", "SpokaneDotnetAspire.ServiceDefaults\SpokaneDotnetAspire.ServiceDefaults.csproj", "{ACB96F75-226D-4B29-823A-A8CD01E94C78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +46,14 @@ Global
 		{35BDB9DD-6B2B-488D-8BD1-23C23C09F56A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35BDB9DD-6B2B-488D-8BD1-23C23C09F56A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35BDB9DD-6B2B-488D-8BD1-23C23C09F56A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7649FC9C-05A5-455D-B32E-1474AD89CCA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7649FC9C-05A5-455D-B32E-1474AD89CCA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7649FC9C-05A5-455D-B32E-1474AD89CCA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7649FC9C-05A5-455D-B32E-1474AD89CCA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACB96F75-226D-4B29-823A-A8CD01E94C78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACB96F75-226D-4B29-823A-A8CD01E94C78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACB96F75-226D-4B29-823A-A8CD01E94C78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACB96F75-226D-4B29-823A-A8CD01E94C78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
